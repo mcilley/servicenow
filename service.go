@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"log"
+	"os"
 )
 
 var httpRE = regexp.MustCompile("^https?://")
@@ -15,7 +17,7 @@ var httpRE = regexp.MustCompile("^https?://")
 // Err represents a possible error message that came back from the server
 type Err struct {
 	Err    string `json:"error"`
-	Reason string
+	Reason string `json:"reason"`
 }
 
 func (e Err) Error() string {
@@ -36,7 +38,7 @@ func sys(param string) string {
 
 // PerformFor creates and executes an authenticated HTTP request to an instance,
 // for the given table, action and optional id, with the passed options, and
-// unmarhals the JSON into the passed output interface pointer, returning an
+// unmarshal's the JSON into the passed output interface pointer, returning an
 // error.
 func (c *Client) PerformFor(table, action, id string, opts url.Values, body interface{}, out interface{}) error {
 	inst := c.Instance
@@ -66,11 +68,20 @@ func (c *Client) PerformFor(table, action, id string, opts url.Values, body inte
 
 	if body != nil {
 		meth = http.MethodPost
-		err := json.NewEncoder(buf).Encode(body)
-		if err != nil {
+		if err := json.NewEncoder(buf).Encode(body); err != nil {
 			return err
 		}
 	}
+
+	f, err := os.OpenFile("testlogfile", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+	    log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+
+	log.SetOutput(f)
+	log.Println(u+"?"+vals.Encode())
+	log.Println(buf)
 
 	req, err := http.NewRequest(meth, u+"?"+vals.Encode(), buf)
 	if err != nil {
@@ -104,13 +115,13 @@ func (c *Client) PerformFor(table, action, id string, opts url.Values, body inte
 }
 
 // GetFor performs a servicenow get to the specified table, with options, and
-// unmarhals JSON into the output parameter.
+// unmarshal's JSON into the output parameter.
 func (c Client) GetFor(table string, id string, opts url.Values, out interface{}) error {
 	return c.PerformFor(table, "get", id, opts, nil, out)
 }
 
 // GetRecordsFor performs a servicenow getRecords to the specified table, with
-// options, and unmarhals JSON into the output parameter.
+// options, and unmarshal's JSON into the output parameter.
 func (c Client) GetRecordsFor(table string, opts url.Values, out interface{}) error {
 	return c.PerformFor(table, "getRecords", "", opts, nil, out)
 }
@@ -129,4 +140,22 @@ func (c Client) GetRecords(table string, opts url.Values) ([]map[string]interfac
 // data, and takes a destination object out for the response data.
 func (c Client) Insert(table string, obj, out interface{}) error {
 	return c.PerformFor(table, "insert", "", nil, obj, out)
+}
+
+// Update creates a new record for the specified table, with the specified obj
+// data, and takes a destination object out for the response data.
+func (c Client) Update(table string, opts url.Values, obj, out interface{}) error {
+	return c.PerformFor(table, "update", "", opts, obj, out)
+}
+
+// GetFor performs a servicenow get to the specified table, with options, and
+// unmarshal's JSON into the output parameter.
+func (c Client) DeleteRecord(table string, opts url.Values, obj, out interface{}) error {
+	return c.PerformFor(table, "deleteRecord", "", opts, obj, out)
+}
+
+// DeleteRecords deletes a record in the specified table, with the specified obj
+// data, and takes a destination object out for the response data.
+func (c Client) DeleteRecords(table string, opts url.Values, obj, out interface{}) error {
+	return c.PerformFor(table, "deleteMultiple", "", opts, obj, out)
 }
