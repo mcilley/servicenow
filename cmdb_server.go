@@ -20,7 +20,7 @@ func (c Client) GetCMDBServers(query url.Values) ([]CMDBServer, error) {
 // CMDBServer is a struct type to define the formatted response received from the JSONv2
 // ServiceNow Web Service
 type CMDBServer struct {
-	Status              string `json:"__status"`
+	ResponseStatus      string `json:"__status"`
 	Asset               string `json:"asset"`
 	AssetTag            string `json:"asset_tag"`
 	Assigned            string `json:"assigned"`

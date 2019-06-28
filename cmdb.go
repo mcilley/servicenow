@@ -13,7 +13,7 @@ func (c Client) GetCMDBItems(query url.Values) ([]CMDBItem, error) {
 }
 
 type CMDBItem struct {
-	Status              string `json:"__status"`
+	ResponseStatus      string `json:"__status"`
 	Asset               string `json:"asset"`
 	AssetTag            string `json:"asset_tag"`
 	Assigned            string `json:"assigned"`

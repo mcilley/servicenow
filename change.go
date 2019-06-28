@@ -16,7 +16,7 @@ func (c Client) GetChangeRequests(query url.Values) ([]ChangeRequest, error) {
 }
 
 type ChangeRequest struct {
-	Status                   string      `json:"__status"`
+	ResponseStatus           string      `json:"__status"`
 	Active                   bool        `json:"active,string"`
 	ActivityDue              string      `json:"activity_due"`
 	AdditionalAssigneeList   string      `json:"additional_assignee_list"`
