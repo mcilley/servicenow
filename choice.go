@@ -2,8 +2,12 @@ package servicenow
 
 import "net/url"
 
+// TableChoice defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableChoice = "sys_choice.do"
 
+// GetChoiceItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the sys_choice table and query as the arguments, then format the response into a list of Choice type
 func (c Client) GetChoiceItems(query url.Values) ([]Choice, error) {
 	var res struct {
 		Records []Choice

@@ -2,8 +2,12 @@ package servicenow
 
 import "net/url"
 
+// TableCostCenter defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableCostCenter = "cmn_cost_center.do"
 
+// GetCostCenterItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmn_cost_center table and query as the arguments, then format the response into a list of CostCenter types
 func (c Client) GetCostCenterItems(query url.Values) ([]CostCenter, error) {
 	var res struct {
 		Records []CostCenter

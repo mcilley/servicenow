@@ -5,8 +5,12 @@ import (
 	"net/url"
 )
 
+// TableChangeRequests defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableChangeRequests = "change_request"
 
+// GetChangeRequests method will take a url.Value type argument and call the GetRecordsFor method with
+// the change_request table and query as the arguments, then format the response into a list of ChangeRequest type
 func (c Client) GetChangeRequests(query url.Values) ([]ChangeRequest, error) {
 	var res struct {
 		Records []ChangeRequest

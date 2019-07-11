@@ -2,8 +2,12 @@ package servicenow
 
 import "net/url"
 
+// TableUser defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableUser = "sys_user"
 
+// GetUserItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the sys_user table and query as the arguments, then format the response into a list of User types
 func (c Client) GetUserItems(query url.Values) ([]User, error) {
 	var res struct {
 		Records []User

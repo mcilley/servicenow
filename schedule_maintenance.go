@@ -2,8 +2,13 @@ package servicenow
 
 import "net/url"
 
+
+// TableScheduleMaint defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableScheduleMaint = "cmn_schedule_maintenance.do"
 
+// GetScheduleMaintItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmn_schedule_maintenance table and query as the arguments, then format the response into a list of ScheduleMaint
 func (c Client) GetScheduleMaintItems(query url.Values) ([]ScheduleMaint, error) {
 	var res struct {
 		Records []ScheduleMaint

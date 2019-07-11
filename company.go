@@ -2,8 +2,12 @@ package servicenow
 
 import "net/url"
 
+// TableCompany defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableCompany = "core_company.do"
 
+// GetCompanyItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the core_company table and query as the arguments, then format the response into a list of Company types
 func (c Client) GetCompanyItems(query url.Values) ([]Company, error) {
 	var res struct {
 		Records []Company

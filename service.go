@@ -10,6 +10,8 @@ import (
 	"regexp"
 	"log"
 	"os"
+	"strings"
+	"sort"
 )
 
 var httpRE = regexp.MustCompile("^https?://")
@@ -36,6 +38,31 @@ func sys(param string) string {
 	return fmt.Sprintf("sysparm_%s", param)
 }
 
+func SnowQueryEncode( v url.Values ) string {
+	if v == nil {
+		return ""
+	}
+	var buf strings.Builder
+	keys := make([]string, 0, len(v))
+	for k := range v {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		vs := v[k]
+		keyEscaped := k
+		for _, v := range vs {
+			if buf.Len() > 0 {
+				buf.WriteByte('^')
+			}
+			buf.WriteString(keyEscaped)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+		}
+	}
+	return buf.String()
+}
+
 // PerformFor creates and executes an authenticated HTTP request to an instance,
 // for the given table, action and optional id, with the passed options, and
 // unmarshal's the JSON into the passed output interface pointer, returning an
@@ -60,7 +87,7 @@ func (c *Client) PerformFor(table, action, id string, opts url.Values, body inte
 	}
 
 	if opts != nil {
-		vals.Set(sys("query"), opts.Encode())
+		vals.Set(sys("query"), SnowQueryEncode(opts))
 	}
 
 	meth := http.MethodGet
@@ -83,6 +110,7 @@ func (c *Client) PerformFor(table, action, id string, opts url.Values, body inte
 	log.Println(u+"?"+vals.Encode())
 	log.Println(buf)
 
+	fmt.Println(meth, u+"?"+vals.Encode())
 	req, err := http.NewRequest(meth, u+"?"+vals.Encode(), buf)
 	if err != nil {
 		return err
@@ -150,12 +178,12 @@ func (c Client) Update(table string, opts url.Values, obj, out interface{}) erro
 
 // GetFor performs a servicenow get to the specified table, with options, and
 // unmarshal's JSON into the output parameter.
-func (c Client) DeleteRecord(table string, opts url.Values, obj, out interface{}) error {
-	return c.PerformFor(table, "deleteRecord", "", opts, obj, out)
+func (c Client) DeleteRecord(table string, id string, opts url.Values, obj, out interface{}) error {
+	return c.PerformFor(table, "deleteRecord", id , nil, obj, out)
 }
 
 // DeleteRecords deletes a record in the specified table, with the specified obj
 // data, and takes a destination object out for the response data.
-func (c Client) DeleteRecords(table string, opts url.Values, obj, out interface{}) error {
-	return c.PerformFor(table, "deleteMultiple", "", opts, obj, out)
+func (c Client) DeleteRecords(table string, id string, obj, out interface{}) error {
+	return c.PerformFor(table, "deleteMultiple", id, nil, obj, out)
 }

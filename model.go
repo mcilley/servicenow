@@ -2,9 +2,13 @@ package servicenow
 
 import "net/url"
 
+// TableModel/TableHwModel defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableModel = "cmdb_model"
 const TableHwModel = "cmdb_hardware_product_model"
 
+// GetModelItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmdb_model table and query as the arguments, then format the response into a list of Model types
 func (c Client) GetModelItems(query url.Values) ([]Model, error) {
 	var res struct {
 		Records []Model
@@ -13,7 +17,9 @@ func (c Client) GetModelItems(query url.Values) ([]Model, error) {
 	return res.Records, err
 }
 
-//HW Model table returns the same format as cmdb_model table
+// GetHwModelItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmdb_hardware_product_model table and query as the arguments, then format the response into a list of Model types
+// HW Model table returns the same format as cmdb_model table
 func (c Client) GetHwModelItems(query url.Values) ([]Model, error) {
 	var res struct {
 		Records []Model

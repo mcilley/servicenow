@@ -2,8 +2,12 @@ package servicenow
 
 import "net/url"
 
+// TableLocation defines the name of the table withing the JSONv2 web service to interface with
+// SNOW CMDB
 const TableLocation = "cmn_location.do"
 
+// GetLocationItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmn_location table and query as the arguments, then format the response into a list of Location types
 func (c Client) GetLocationItems(query url.Values) ([]Location, error) {
 	var res struct {
 		Records []Location

@@ -2,14 +2,13 @@ package servicenow
 
 import "net/url"
 
-// TableCMDB defines the name of the table withing the JSONv2 web service to interface with
+// TableCMDBVm defines the name of the table withing the JSONv2 web service to interface with
 // SNOW CMDB
 const TableCMDBVm = "cmdb_ci_vmware_instance"
 
-
-// GetCMDBItems method will take a url.Value type argument and call the GetRecordsFor method with
-// the cmdb_ci_server table and query as the arguments, then format the response into a list of CMDBVm types
-func (c Client) GetCMDBVms(query url.Values) ([]CMDBVm, error) {
+// GetCMDBVmItems method will take a url.Value type argument and call the GetRecordsFor method with
+// the cmdb_ci_vmware_instance table and query as the arguments, then format the response into a list of CMDBVm types
+func (c Client) GetCMDBVmItems(query url.Values) ([]CMDBVm, error) {
 	var res struct {
 		Records []CMDBVm
 	}
