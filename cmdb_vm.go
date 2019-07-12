@@ -67,7 +67,7 @@ type CMDBVm struct {
 	Manufacturer          string `json:"manufacturer"`
 	Memory                string `json:"memory"`
 	ModelID               string `json:"model_id"`
-	ModuleNumber          string `json:"model_number"`
+	ModuleNumber          string `json:"model_number"`	
 	Monitor               string `json:"monitor"`
 	Name                  string `json:"name"`
 	Nics                  string `json:"nics"`

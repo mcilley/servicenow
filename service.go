@@ -38,6 +38,11 @@ func sys(param string) string {
 	return fmt.Sprintf("sysparm_%s", param)
 }
 
+// Helper function, for encoding net/url value type into a query for ServiceNow
+// Stock net/url encode will join multiple key/value pairs with '&'
+// Service now uses "^" for "anding" multiple query params
+// See:
+// docs.servicenow.com/bundle/kingston-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html
 func SnowQueryEncode( v url.Values ) string {
 	if v == nil {
 		return ""
