@@ -41,8 +41,7 @@ func sys(param string) string {
 // Helper function, for encoding net/url value type into a query for ServiceNow
 // Stock net/url encode will join multiple key/value pairs with '&'
 // Service now uses "^" for "anding" multiple query params
-// See:
-// docs.servicenow.com/bundle/kingston-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html
+// See: docs.servicenow.com/bundle/kingston-platform-user-interface/page/use/common-ui-elements/reference/r_OpAvailableFiltersQueries.html
 func SnowQueryEncode( v url.Values ) string {
 	if v == nil {
 		return ""
@@ -105,17 +104,6 @@ func (c *Client) PerformFor(table, action, id string, opts url.Values, body inte
 		}
 	}
 
-	f, err := os.OpenFile("testlogfile", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
-	if err != nil {
-	    log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
-
-	log.SetOutput(f)
-	log.Println(u+"?"+vals.Encode())
-	log.Println(buf)
-
-	fmt.Println(meth, u+"?"+vals.Encode())
 	req, err := http.NewRequest(meth, u+"?"+vals.Encode(), buf)
 	if err != nil {
 		return err
