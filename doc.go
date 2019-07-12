@@ -4,5 +4,5 @@
 // non-ISO datetime format). As needs arise, higher-level abstractions may be
 // added that provide easy access to standard structured objects in the
 // ServiceNow API, for example a method to easily access structs representing
-// change requests.
+// change requests.or CMDB Items
 package servicenow
